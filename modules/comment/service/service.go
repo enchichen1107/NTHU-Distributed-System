@@ -66,7 +66,7 @@ func (s *service) CreateComment(ctx context.Context, req *pb.CreateCommentReques
 
 	comment := &dao.Comment{
 		VideoID: req.GetVideoId(),
-		Content: req.GetContent(),
+		Content: req.Content,
 	}
 
 	uuid, err := s.commentDAO.Create(ctx, comment)
@@ -93,7 +93,7 @@ func (s *service) UpdateComment(ctx context.Context, req *pb.UpdateCommentReques
 
 	comment := &dao.Comment{
 		ID:      commentID,
-		Content: req.GetContent(),
+		Content: req.Content,
 	}
 	if err := s.commentDAO.Update(ctx, comment); err != nil {
 		if errors.Is(err, dao.ErrCommentNotFound) {
