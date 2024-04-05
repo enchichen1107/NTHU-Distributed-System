@@ -23,7 +23,7 @@ message CommentInfo {
 // gRPC TODO: Define following message schemas.
 message CreateCommentRequest {
 	string video_id = 1;
-	string comment = 2;
+	string content = 2;
 }
 
 message CreateCommentResponse {
