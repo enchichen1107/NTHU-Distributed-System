@@ -58,10 +58,9 @@ gRPC TODO:
  4. Return the result. You may use .String() method to transform the return value of dao API to a string.
 */
 func (s *service) CreateComment(ctx context.Context, req *pb.CreateCommentRequest) (*pb.CreateCommentResponse, error) {
-	_, err := s.videoClient.GetVideo(ctx, &videopb.GetVideoRequest{
+	if _, err := s.videoClient.GetVideo(ctx, &videopb.GetVideoRequest{
 		Id: req.GetVideoId(),
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
@@ -104,7 +103,9 @@ func (s *service) UpdateComment(ctx context.Context, req *pb.UpdateCommentReques
 		return nil, err
 	}
 
-	return &pb.UpdateCommentResponse{Comment: comment.ToProto()}, nil
+	return &pb.UpdateCommentResponse{
+		Comment: comment.ToProto(),
+	}, nil
 }
 
 /*
