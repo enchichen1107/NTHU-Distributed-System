@@ -38,13 +38,29 @@ func (s *stream) HandleVideoCreated(ctx context.Context, req *pb.HandleVideoCrea
 		variant := strconv.Itoa(int(req.GetScale()))
 
 		// [Kafka TODO]
-		// [Describe] Transcode video if get message with scale != 0, you can handle error occurance like above primitive.ObjectIDFromHex(req.GetId()).
+		// [Describe] Transcode video if get message with scale != 0, you can handle error occurrence like above primitive.ObjectIDFromHex(req.GetId()).
+		err := s.handleVideoWithVariant(ctx, id, variant, req.GetUrl())
+		if err != nil {
+			return nil, &saramakit.HandlerError{Retry: true, Err: err}
+		}
 
 		return &emptypb.Empty{}, nil
 	}
 
 	// [Kafka TODO]
-	// [Describe] Fanout create events to each variant [1080, 720, 480, 320], you can handle error occurance like above primitive.ObjectIDFromHex(req.GetId()).
+	// [Describe] Fanout create events to each variant [1080, 720, 480, 320], you can handle error occurrence like above primitive.ObjectIDFromHex(req.GetId()).
+	variants := []int32 {1080, 720, 480, 320}
+	for i := 0; i < len(variants); i++ { 
+    err := s.produceVideoCreatedWithScaleEvent(&pb.HandleVideoCreatedRequest{
+			Id: req.GetId(),
+			Url: req.GetUrl(),
+			Scale: variants[i],
+		})
+		if err != nil {
+			return nil, &saramakit.HandlerError{Retry: true, Err: err}
+		}
+  }
+	
 
 	return &emptypb.Empty{}, nil
 }
@@ -72,6 +88,9 @@ func (s *stream) produceVideoCreatedWithScaleEvent(req *pb.HandleVideoCreatedReq
 
 	// [Kafka TODO]
 	// [Describe] Send message to kafka
+	if err := s.producer.SendMessages(msgs); err != nil{
+		return err
+	}
 
 	return nil
 }
