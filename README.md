@@ -4,6 +4,11 @@ The repository includes microservices for the NTHU Distributed System course lab
 
 Before going through the following parts, make sure your Docker is running since we are generating/testing/building code inside a Docker container to prevent dependencies from conflicting/missing on your host machine.
 
+## Lab-Kafka testing result
+![Alt text](./img/result1.png?raw=true "test unit result")
+Below result is tested on machine provided by this course, due to the docker memory limit in my own laptop
+![Alt text](./img/result2.png?raw=true "test result for db")
+
 ## Features
 
 The video service serves APIs that accept uploading a video, listing videos, getting a video and deleting a video.
